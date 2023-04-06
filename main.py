@@ -13,15 +13,20 @@ db.init_app(app)
 conn = db.connect()
 cursor =conn.cursor()
 
-
-# class Contact(db.Model):
-#     name = db.Column(db.String, nullable=False)
-#     message = db.Column(db.String, nullable=False)
-#     email = db.Column(db.String,primary_key=True)
-#     phone=db.Column(db.Integer,unique=False)
 @app.route("/")
 def index():
-    return render_template("index.html");
+    param = [];
+    cursor.execute('select title,content,date,author,slug from post');
+    for (title, content,date,author,slug) in cursor:
+        obj = {};
+        obj['title'] = title;
+        obj['date']=date;
+        obj['author']=author;
+        obj['content'] = content;
+        obj['slug']=slug;
+        param.append(obj)
+        print(slug)
+    return render_template("index.html",data=param);
 
 @app.route("/about")
 def about():
@@ -39,7 +44,21 @@ def contact():
      cursor.execute('INSERT INTO contact VALUES (% s, % s, % s ,% s)', (name, email,phone,message))
      conn.commit();
      return  render_template('index.html')
-@app.route("/post")
-def post():
-    return render_template("post.html");
+@app.route("/post/<slug>")
+def post(slug):
+    cursor = conn.cursor();
+    param=list({});
+    cursor.execute('select title,content,date,author,slug from post');
+    print(slug)
+    for (title,content,date,author,slugrec )in cursor:
+        if slugrec==slug :
+         obj={};
+         obj['title']=title;
+         obj['content']=content;
+         obj['date']=date;
+         obj['author']=author;
+         param.append(obj)
+         print(title,content)
+    return render_template("post.html",data=param);
+
 app.run(debug=True)
