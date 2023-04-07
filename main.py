@@ -14,7 +14,6 @@ conn = db.connect()
 cursor = conn.cursor()
 app.secret_key = '234432W99*()_)^%'
 
-
 @app.route("/")
 def index():
     param = [];
@@ -119,16 +118,19 @@ def edit(sl):
 def logout():
     session.pop('logged-email');
     return render_template("adminlogin.html")
-@app.route("/addpost",methods=['GET','POST'])
+
+
+@app.route("/addpost", methods=['GET', 'POST'])
 def addpost():
-    if(request.method=='GET'):
-     return  render_template('addpost.html')
-    title=request.form['title'];
-    slug=request.form['slug'];
-    content=request.form['content'];
-    date=request.form['date'];
-    author=request.form['author'];
-    cursor.execute('INSERT INTO post (title,content,author,date,slug)  VALUES (% s, % s, % s ,% s ,% s)', (title,content,author, date,slug))
+    if (request.method == 'GET'):
+        return render_template('addpost.html')
+    title = request.form['title'];
+    slug = request.form['slug'];
+    content = request.form['content'];
+    date = request.form['date'];
+    author = request.form['author'];
+    cursor.execute('INSERT INTO post (title,content,author,date,slug)  VALUES (% s, % s, % s ,% s ,% s)',
+                   (title, content, author, date, slug))
     conn.commit();
     param = [];
     cursor.execute('select sl, title,content,date,author,slug from post');
@@ -141,5 +143,7 @@ def addpost():
         obj['slug'] = slug;
         obj['sl'] = sl;
         param.append(obj)
-    return  render_template('dashboard.html',data=param);
+    return render_template('dashboard.html', data=param);
+
+
 app.run(debug=True)
