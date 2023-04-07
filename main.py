@@ -86,13 +86,13 @@ def dashboard():
 
     email = request.form['email']
     password = request.form['password'];
-    if  'logged-emai' in session and session['logged-email']==email:
+    if  'logged-email' in session and session['logged-email']==email:
       return  render_template('dashboard.html',data=param);
 
     cursor.execute('select * from admins where email=\'%s\' and password=\'%s\'' % (email, password))
     if (cursor.rowcount == 0):
         return render_template('adminlogin.html');
-    session['islogged']=True;
+
     session['logged-email']=email;
     return render_template('dashboard.html',data=param);
 
@@ -113,4 +113,8 @@ def edit(sl):
     print(content)
     return  render_template("edit.html",title=title,content=content,sl=sl)
 
+@app.route("/logout")
+def logout():
+    session.pop('logged-email');
+    return  render_template("adminlogin.html")
 app.run(debug=True)
