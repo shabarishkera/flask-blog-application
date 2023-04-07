@@ -108,8 +108,9 @@ def edit(sl):
         return render_template("index.html")
     cursor.execute('select title,content from post where sl=%s ' % (sl));
     row=cursor.fetchone();
-    title=row[0];
-    content=row[1];
+    print(row)
+    title,content=row;
+    print(content)
     return  render_template("edit.html",title=title,content=content,sl=sl)
 
 app.run(debug=True)
