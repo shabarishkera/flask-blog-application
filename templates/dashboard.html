@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block body %}
+<!-- Page Header-->
+        <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="site-heading">
+                            <h1>ADMIN PANEL</h1>
+                            <span class="subheading">Change EveryThing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+<main>
+
+                   <table class="table">
+  <thead>
+    <tr>
+        <th scope="col">sl</th>
+      <th scope="col">title</th>
+      <th scope="col">author</th>
+      <th scope="col">edit</th>
+         <th scope="col">delete</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for obj in data %}
+    <tr>
+        <td>{{obj.sl}}</td>
+      <th scope="row">{{obj.title}}</th>
+      <td>{{obj.author}}</td>
+           <td><a href="/edit/{{obj.sl}}" class="btn btn-primary">edit</a> </td>
+        <td><a href="/delete/{{obj.sl}}" class="btn btn-primary">Delete</a> </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+</main>
+
+
+
+{% endblock %}
