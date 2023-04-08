@@ -70,8 +70,6 @@ def post(slug):
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    if (request.method == 'GET'):
-        return render_template('adminlogin.html');
     param = [];
     cursor.execute('select sl, title,content,date,author,slug from post');
     for (sl, title, content, date, author, slug) in cursor:
@@ -84,6 +82,11 @@ def dashboard():
         obj['sl'] = sl;
         param.append(obj)
 
+    if (request.method == 'GET'):
+
+        if 'logged-email' in session:
+            return render_template('dashboard.html', data=param)
+        return render_template('adminlogin.html');
     email = request.form['email']
     password = request.form['password'];
     if 'logged-email' in session and session['logged-email'] == email:
@@ -131,6 +134,23 @@ def addpost():
     author = request.form['author'];
     cursor.execute('INSERT INTO post (title,content,author,date,slug)  VALUES (% s, % s, % s ,% s ,% s)',
                    (title, content, author, date, slug))
+    conn.commit();
+    param = [];
+    cursor.execute('select sl, title,content,date,author,slug from post');
+    for (sl, title, content, date, author, slug) in cursor:
+        obj = {};
+        obj['title'] = title;
+        obj['date'] = date;
+        obj['author'] = author;
+        obj['content'] = content;
+        obj['slug'] = slug;
+        obj['sl'] = sl;
+        param.append(obj)
+    return render_template('dashboard.html', data=param);
+
+@app.route("/delete/<sl>")
+def delete(sl):
+    cursor.execute("delete from post where sl=%s",sl);
     conn.commit();
     param = [];
     cursor.execute('select sl, title,content,date,author,slug from post');
